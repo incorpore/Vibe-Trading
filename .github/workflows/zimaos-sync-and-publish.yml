@@ -81,9 +81,20 @@ jobs:
           before="$(git rev-parse HEAD)"
           if ! git merge --no-edit "upstream/${UPSTREAM_BRANCH}" \
                  -m "chore(sync): merge ${UPSTREAM_REPO}@${UPSTREAM_BRANCH}"; then
-            git merge --abort || true
-            echo "::error::Merge conflict with ${UPSTREAM_REPO}@${UPSTREAM_BRANCH}. Merge it manually into main."
-            exit 1
+            # Files this fork deleted on purpose (e.g. upstream-only workflows)
+            # conflict whenever upstream edits them ("deleted by us", status
+            # DU). Keep them deleted; any other conflict needs a human.
+            git status --porcelain | awk '$1 == "DU" {print $2}' | while read -r path; do
+              echo "Keeping fork deletion of ${path}"
+              git rm --quiet -- "${path}"
+            done
+            if [ -n "$(git diff --name-only --diff-filter=U)" ]; then
+              git diff --name-only --diff-filter=U
+              git merge --abort || true
+              echo "::error::Merge conflict with ${UPSTREAM_REPO}@${UPSTREAM_BRANCH}. Merge it manually into main."
+              exit 1
+            fi
+            git commit --no-edit --quiet
           fi
 
           if [ "${HAS_PAT}" != "true" ] && \
