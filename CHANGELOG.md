@@ -1,9 +1,21 @@
 # Changelog
 
+- Strategy adaptation now binds each child to its own description, universe, date window and hashed backtest artifacts; scoped refresh preserves other strategies' evidence. Agent/MCP, CLI, authenticated REST and the Web welcome entry share the workflow.
+
 All notable changes to Vibe-Trading are documented in this file.
 This project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
+
+### Maintenance — 2026-10-13
+
+- extraETF Investments imports now feed portfolio snapshots, with explicit row-count/freshness checks, EUR reference-rate valuation, preserved account/ISIN identity, and non-executing allocation proposals across Web, REST, CLI and the portfolio tool.
+
+- Standalone validation preserves saved parameters and seeds across walk-forward, Monte Carlo and permutation tests (#1815).
+- Custom OpenAI-compatible providers use tested credentials in the OS vault, canonical model settings and the `provider custom` CLI; existing channel settings remain available (#1264).
+- Pixel Office shares a transactional manual task board across Web, CLI and the agent tool. Assignment does not imply execution, and ranks grant no trading permissions (#1616).
+- mStock Type B reads expose separate holdings, net-position books and raw fund limits. Orders remain disabled; unmapped account values are excluded from portfolio aggregation (#1675).
+- Gildata adds bounded China macro, announcement and broker-report research plus OTC fund NAV reads. NAV evidence is scoped to that tool's declared fields. HK raw-price caliber and exact CN index identity are preserved (#1485).
 
 ### Maintenance — 2026-10-12
 

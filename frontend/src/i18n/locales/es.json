@@ -26,7 +26,8 @@
       "correlation": "Compara cómo se mueven los activos entre sí.",
       "scheduled": "Repite una investigación según un horario.",
       "runtime": "Comprueba conexiones de brókeres y el estado de ejecución de operaciones.",
-      "settings": "Configura modelos, fuentes de datos y conexiones de brókeres."
+      "settings": "Configura modelos, fuentes de datos y conexiones de brókeres.",
+      "pixelOffice": "Planifica y asigna tareas de investigación. La asignación no inicia la ejecución; los rangos son etiquetas y no conceden permisos de negociación."
     },
     "instructions": {
       "reports": "Primero pide al asistente un backtest de una estrategia y abre aquí sus resultados. Descarga los PDF y documentos generados en el chat desde la conversación original.",
@@ -36,7 +37,8 @@
       "correlation": "Introduce al menos dos símbolos de activos, elige el período y pulsa Calcular.",
       "scheduled": "Introduce la instrucción de investigación, elige la frecuencia y guarda. El programador local debe estar activado para ejecutar tareas; el envío requiere un canal configurado.",
       "runtime": "Primero configura una conexión de bróker en Ajustes o Cartera. Las operaciones disponibles dependen de sus capacidades y de tu autorización.",
-      "settings": "Configura un modelo para empezar. Añade datos o conexiones de brókeres según lo necesites; investigar datos públicos de mercado no requiere una cuenta de bróker."
+      "settings": "Configura un modelo para empezar. Añade datos o conexiones de brókeres según lo necesites; investigar datos públicos de mercado no requiere una cuenta de bróker.",
+      "pixelOffice": "Planifica y asigna tareas de investigación. La asignación no inicia la ejecución; los rangos son etiquetas y no conceden permisos de negociación."
     }
   },
   "layout": {
@@ -66,7 +68,8 @@
     "sidebar": "Barra lateral de Vibe-Trading",
     "mainNavigation": "Navegación principal",
     "about": "Acerca de",
-    "sessionsLoadFailed": "No se pueden cargar las conversaciones."
+    "sessionsLoadFailed": "No se pueden cargar las conversaciones.",
+    "pixelOffice": "Oficina de píxeles"
   },
   "runtime": {
     "monitorBadge": "Monitor de Runtime",
@@ -396,7 +399,10 @@
       "shadowDeltaPrompt": "Ejecuta un backtest espejo de los últimos 90 días y desglosa dónde mi PnL se desvió del espejo (incumplimientos de reglas, salidas anticipadas, señales perdidas)",
       "shadowReport": "Genera informe de cuenta espejo",
       "shadowReportDesc": "Un informe compartible de 8 partes: la curva de tu cuenta, el retorno ajustado por riesgo y de dónde vino cada ganancia",
-      "shadowReportPrompt": "Genera el informe de cuenta espejo y dame la URL — comienza con la diferencia tú-vs-espejo"
+      "shadowReportPrompt": "Genera el informe de cuenta espejo y dame la URL — comienza con la diferencia tú-vs-espejo",
+      "adaptStrategy": "Adaptar una estrategia registrada",
+      "adaptStrategyDesc": "Conservar la señal y probar otro universo",
+      "adaptStrategyPrompt": "Ayúdame a adaptar una estrategia registrada a otro universo y período. Primero enumera las estrategias y revisa la evidencia de la original; pregunta por el ID, los instrumentos, las fechas y el tamaño de posición que falten. Conserva la señal, genera el código de la derivada, ejecuta el backtest e informa solo de su propia evidencia actualizada."
     },
     "taskSubtitle": "Pregunta sobre una acción, una estrategia o tu portafolio — obtendré los datos, haré los cálculos y te mostraré cada paso.",
     "quickActions": "Acciones rápidas",
@@ -1107,7 +1113,7 @@
     "authentication": "Autenticación",
     "apiKey": "Clave de API",
     "tushareTokenDesc": "Usado para datos de acciones A, futuros, fondos y macro de China. Si no se configura, el proyecto recurre a AKShare cuando está disponible.",
-    "gildataTokenDesc": "Fuente opcional de Gildata (Hundsun Juyuan) para acciones A de China. Si se configura, se une al final de la cadena de respaldo de acciones A con barras diarias ajustadas."
+    "gildataTokenDesc": "Datos opcionales de Gildata: precios diarios ajustados de acciones A, precios sin ajustar de Hong Kong e índices, valores liquidativos de fondos no cotizados y herramientas de macroeconomía, anuncios y análisis de China."
   },
   "qveris": {
     "title": "Mercado de herramientas QVeris",
@@ -2131,7 +2137,7 @@
       "badge": "Local y solo lectura · Varias cuentas",
       "title": "Cartera",
       "subtitle": "Una sola valoración de todas las conexiones de solo lectura activas. La cuenta que no se puede leer se marca como error y queda fuera de los totales.",
-      "fxFresh": "USD/CNY {{rate}} · tipo en vivo",
+      "fxFresh": "USD/CNY {{rate}} · tipo de referencia",
       "fxCached": "USD/CNY {{rate}} · tipo en caché",
       "manageAccounts": "Gestionar cuentas",
       "exportCsv": "Exportar CSV",
@@ -2296,6 +2302,30 @@
       "accountDeactivated": " · desactivada",
       "accountSave": "Usar esta cuenta",
       "accountSaved": "Cuenta guardada."
+    },
+    "imports": {
+      "title": "Importar extraETF Investments",
+      "hint": "Solo posiciones, sin efectivo ni precios en tiempo real. La fecha del archivo no es la fecha de observación del precio; los ISIN no tienen un mercado resuelto.",
+      "file": "CSV de Investments",
+      "count": "Número de posiciones esperado (confírmelo en extraETF)",
+      "age": "Antigüedad máxima del archivo (días)",
+      "overlap": "Seleccione fuentes sin solapamientos. La vista de extraETF puede incluir cuentas conectadas aquí.",
+      "import": "Importar archivo",
+      "importing": "Importando…",
+      "success": "Importado. Añada esta exportación desde las fuentes disponibles arriba, guarde y actualice.",
+      "source": "Archivo importado",
+      "mtime": "Archivo modificado: {{time}}",
+      "expires": "Caduca: {{time}}",
+      "tooLarge": "El límite de importación es de 4 MiB."
+    },
+    "rebalance": {
+      "title": "Propuesta de asignación",
+      "hint": "Introduzca porcentajes objetivo que sumen 100%. Los cambios son importes para revisar; no se calculan órdenes, cantidades, impuestos ni comisiones.",
+      "target": "Objetivo de {{id}} (%)",
+      "generate": "Calcular propuesta",
+      "current": "Valor actual",
+      "targetValue": "Valor objetivo",
+      "change": "Cambio de valor"
     }
   },
   "analysis": {
@@ -2345,5 +2375,75 @@
     "selectedFactor": "Factor seleccionado: {{id}}. Solo se evaluará este factor.",
     "fundamentalsRequirement": "Los factores fundamentales necesitan estados SEC seguros en el tiempo y un universo de acciones de EE. UU. (S&P 500).",
     "noEvaluableFactors": "No se pudo evaluar ningún factor. Amplía el historial y comprueba los campos requeridos y el universo de acciones."
+  },
+  "customProviders": {
+    "loadFailed": "No se pudieron cargar los proveedores personalizados",
+    "testPassed": "Prueba del proveedor superada",
+    "testFailed": "La prueba del proveedor falló",
+    "saved": "Proveedor guardado en el almacén local de credenciales",
+    "saveFailed": "No se pudo guardar el proveedor",
+    "activationFailed": "No se pudo activar el proveedor",
+    "title": "Proveedores personalizados compatibles con OpenAI",
+    "description": "Añade un proveedor con una API de completado de chat compatible. La prueba envía una solicitud breve al modelo; tras superarla, la clave se guarda en el almacén de credenciales del sistema.",
+    "keyPrivate": "La clave nunca se muestra",
+    "active": "Activo",
+    "keyStored": "Clave guardada",
+    "activate": "Activar",
+    "empty": "Todavía no hay proveedores personalizados. Añade uno y pruébalo antes de guardarlo.",
+    "add": "Añadir proveedor",
+    "id": "ID del proveedor",
+    "idHint": "Letras minúsculas, números, puntos, guiones o guiones bajos.",
+    "label": "Nombre visible",
+    "labelPlaceholder": "Mi proveedor",
+    "baseUrl": "URL base de la API",
+    "urlHint": "Usa la raíz de la API. No incluyas una clave API en la URL.",
+    "model": "Modelo",
+    "key": "Clave API",
+    "keyPlaceholder": "Introduce la clave para esta prueba",
+    "testing": "Probando…",
+    "test": "Probar conexión",
+    "saving": "Guardando…",
+    "save": "Guardar proveedor probado",
+    "saveHint": "Solo se puede guardar tras una prueba correcta. La activación se confirma por separado.",
+    "confirm": "¿Activar {{label}} para las nuevas solicitudes del agente?",
+    "activated": "{{label}} está activo",
+    "preview": "Prueba superada: {{preview}}",
+    "error": "La prueba del proveedor falló: {{error}}",
+    "waiting": "El proveedor tarda más de lo habitual ({{seconds}} s). La solicitud continuará hasta que venza el tiempo de espera del servidor."
+  },
+  "pixelOffice": {
+    "title": "Oficina de píxeles",
+    "description": "Planifica y asigna tareas de investigación. La asignación no inicia la ejecución; los rangos son etiquetas y no conceden permisos de negociación.",
+    "refresh": "Actualizar",
+    "loading": "Cargando oficina…",
+    "unavailable": "Oficina no disponible. Intenta actualizar.",
+    "floor": "Área de oficinas",
+    "taskCount": "Tareas pendientes: {{count}}",
+    "board": "Tablero de tareas",
+    "empty": "Todavía no hay tareas.",
+    "assignee": "Responsable",
+    "unassigned": "Sin asignar",
+    "result": "Resultado de la tarea",
+    "complete": "Registrar finalización",
+    "create": "Crear tarea",
+    "taskTitle": "Título de la tarea",
+    "instructions": "Instrucciones",
+    "priority": "Prioridad",
+    "ranksTitle": "Rangos organizativos",
+    "priorities": {
+      "low": "Baja",
+      "normal": "Normal",
+      "high": "Alta"
+    },
+    "statuses": {
+      "queued": "En espera",
+      "assigned": "Asignada",
+      "completed": "Completada"
+    },
+    "ranks": {
+      "Operator": "Miembro",
+      "Senior": "Sénior",
+      "Lead": "Responsable"
+    }
   }
 }

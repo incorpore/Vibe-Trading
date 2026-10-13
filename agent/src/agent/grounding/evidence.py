@@ -470,6 +470,8 @@ _REGISTERED_PRICE_INDICATORS: dict[str, tuple[str, ...]] = {
 }
 
 
+_FUND_NAV_PRICE_FIELDS = frozenset({"unit_nav", "accumulated_nav", "adjusted_nav"})
+
 def _is_registered_price_indicator(tool: str, path: str) -> bool:
     """Whether a tool registered this leaf as a price-denominated level.
 
@@ -480,10 +482,15 @@ def _is_registered_price_indicator(tool: str, path: str) -> bool:
     Returns:
         True when the tool has a registration whose prefix the path matches.
     """
+    leaf = str(path or "").strip()
+    if tool == "get_fund_nav":
+        # Only this tool's dated, exactly resolved fund rows expose these
+        # levels. A generic nav field or daily growth is not a price.
+        match = re.fullmatch(r"funds\.[0-9]{6}\.OF\.rows\[[0-9]+\]\.([a-z_]+)", leaf)
+        return bool(match and match.group(1) in _FUND_NAV_PRICE_FIELDS)
     prefixes = _REGISTERED_PRICE_INDICATORS.get(str(tool or ""))
     if not prefixes:
         return False
-    leaf = str(path or "").strip()
     for prefix in prefixes:
         if leaf == prefix:
             return True
