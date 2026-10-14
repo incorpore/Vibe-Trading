@@ -1844,6 +1844,19 @@ class _PolicyMixin:
         # belongs to no instrument, named by the ref, can anchor it then — a
         # difference between two backtests' Sharpes is a portfolio figure.
         unattributed = not symbol and len({record.symbol for record in records if record.symbol}) > 1
+        # A nonempty single ref that names no call, tool, field or artifact
+        # must not borrow a coincidentally equal value from session pools.
+        # Keep observed instrument symbols as valid legacy refs, and keep the
+        # established no_symbol diagnostic for unattributed multi-symbol data.
+        ref = declaration.ref.strip()
+        if ref and not re.search(r"[,;]", ref) and not unattributed:
+            scoped_ref = self._referenced(ref, symbol, None, pool_ambiguous=True)
+            if (scoped_ref is None or (not scoped_ref[0] and not scoped_ref[1])) and not any(
+                _normalize_symbol(ref) == _normalize_symbol(record.symbol)
+                for record in self._evidence
+                if record.symbol and record.status == "observed"
+            ):
+                return "no_evidence"
         anchors: list[float] = []
         if not unattributed:
             # A money-marked result is derived from money: an RSI or a volume
@@ -1853,7 +1866,28 @@ class _PolicyMixin:
                 anchors += self._metric_pool(symbol)
         # Arithmetic across two runs needs both runs' values: a field ref that
         # names several sources anchors all of them instead of none.
-        scoped = self._referenced(declaration.ref, symbol, None, pool_ambiguous=True)
+        # A derived ref may explicitly name several calls or fields. Resolve
+        # every member separately: never borrow an operand from session pools
+        # when any declared member is empty or does not exist.
+        ref_parts = re.split(r"[,;]", declaration.ref)
+        if len(ref_parts) > 1:
+            scoped_parts = [
+                self._referenced(part.strip(), symbol, None, pool_ambiguous=True)
+                if part.strip() else None
+                for part in ref_parts
+            ]
+            if any(part is None or (not part[0] and not part[1]) for part in scoped_parts):
+                return "no_evidence"
+            scoped = (
+                [r for part in scoped_parts for r in part[0]],
+                [v for part in scoped_parts for v in part[1]],
+            )
+        else:
+            scoped = self._referenced(declaration.ref, symbol, None, pool_ambiguous=True)
+            if "::" in declaration.ref and (
+                scoped is None or (not scoped[0] and not scoped[1])
+            ):
+                return "no_evidence"
         if scoped is not None:
             anchors.extend(
                 float(record.value)
